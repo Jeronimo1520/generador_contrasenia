@@ -11,7 +11,7 @@ class PasswordLengthSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Slider(
       min: 1,
-      max: 20,
+      max: 30,
       divisions: 29,
       label: '$passwordLength',
       value: passwordLength.toDouble(),
