@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:generador_contrasenia/views/widgets/password_length_text_field.dart';
+import 'package:generador_contrasenia/views/widgets/password_option_checkboxes.dart';
 import 'dart:math';
 import 'slider.dart';
 
@@ -30,7 +31,7 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Generador de contraseñas"),
+        title: const Text("Generador de contraseñas", style: TextStyle(color: Colors.white),),
         backgroundColor: Colors.red,
         bottom: const PreferredSize(
           preferredSize: Size.fromHeight(30),
@@ -86,28 +87,25 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
                   ],
                 ),
                 const SizedBox(
-                    height:
-                        15), // Añadimos un espacio entre el campo de contraseña generada y el resto de widgets
+                    height: 15), // Espacio entre el campo de contraseña generada y el resto de widgets
                 Row(
                   children: [
                     Expanded(
                       flex: 1,
-                      child:
-                      PasswordLengthTextField(
-                  controller: _lengthController,
-                  onChanged: (String value) {
-                    setState(() {
-                      _passwordLength = int.parse(value).toDouble();
-                      _generatedPassword = _generatePassword();
-                    });
-                  },
-                ),
+                      child: PasswordLengthTextField(
+                        controller: _lengthController,
+                        onChanged: (String value) {
+                          setState(() {
+                            _passwordLength = int.parse(value).toDouble();
+                            _generatedPassword = _generatePassword();
+                          });
+                        },
+                      ),
                     ),
                     const SizedBox(width: 5),
                     Expanded(
                       flex: 1,
-                      child: 
-                      PasswordLengthSlider(
+                      child: PasswordLengthSlider(
                         passwordLength: _passwordLength,
                         onChanged: (double value) {
                           setState(() {
@@ -154,56 +152,20 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
                         values['numbersActivated'] = true;
                         values['symbolsActivated'] = true;
                         _generatedPassword =
-                            _generatePassword(); // Actualizamos la contraseña generada cuando cambia el tipo
+                            _generatePassword(); // Actualiza la contraseña generada cuando cambia el tipo
                       }
                     });
                   },
                 ),
-                CheckboxListTile(
-                  title: const Text('Incluir mayúsculas'),
-                  value: values['uppercaseActivated'],
-                  activeColor: Colors.red,
-                  onChanged: (value) {
+                PasswordOptionCheckboxes(
+                  uppercaseActivated: values['uppercaseActivated'],
+                  lowercaseActivated: values['lowercaseActivated'],
+                  numbersActivated: values['numbersActivated'],
+                  symbolsActivated: values['symbolsActivated'],
+                  onChanged: (bool? value, String option) {
                     setState(() {
-                      values['uppercaseActivated'] = value!;
-                      _generatedPassword =
-                          _generatePassword(); // Actualizamos la contraseña generada cuando cambia la configuración
-                    });
-                  },
-                ),
-                CheckboxListTile(
-                  title: const Text('Incluir minúsculas'),
-                  value: values['lowercaseActivated'],
-                  activeColor: Colors.red,
-                  onChanged: (value) {
-                    setState(() {
-                      values['lowercaseActivated'] = value!;
-                      _generatedPassword =
-                          _generatePassword(); // Actualizamos la contraseña generada cuando cambia la configuración
-                    });
-                  },
-                ),
-                CheckboxListTile(
-                  title: const Text('Incluir números'),
-                  value: values['numbersActivated'],
-                  activeColor: Colors.red,
-                  onChanged: (value) {
-                    setState(() {
-                      values['numbersActivated'] = value!;
-                      _generatedPassword =
-                          _generatePassword(); // Actualizamos la contraseña generada cuando cambia la configuración
-                    });
-                  },
-                ),
-                CheckboxListTile(
-                  title: const Text('Incluir símbolos'),
-                  value: values['symbolsActivated'],
-                  activeColor: Colors.red,
-                  onChanged: (value) {
-                    setState(() {
-                      values['symbolsActivated'] = value!;
-                      _generatedPassword =
-                          _generatePassword(); // Actualizamos la contraseña generada cuando cambia la configuración
+                      values[option] = value!;
+                      _generatedPassword = _generatePassword();
                     });
                   },
                 ),
