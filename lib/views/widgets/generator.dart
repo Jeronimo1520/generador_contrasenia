@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:generador_contrasenia/views/widgets/password_length_text_field.dart';
 import 'dart:math';
+import 'slider.dart';
 
 class PasswordGenerator extends StatefulWidget {
   const PasswordGenerator({super.key});
@@ -90,40 +92,28 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
                   children: [
                     Expanded(
                       flex: 1,
-                      child: TextField(
-                        controller: _lengthController,
-                        keyboardType: TextInputType.number,
-                        onChanged: (value){
-                          setState(() {
-                            _passwordLength = double.parse(value);
-                            _generatedPassword = _generatePassword();
-                          });
-                        },
-                        decoration: const InputDecoration(
-                          labelText: "Longitud de la contraseña",
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 10),
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.red)),
-                        ),
-                        
-                      ),
+                      child:
+                      PasswordLengthTextField(
+                  controller: _lengthController,
+                  onChanged: (String value) {
+                    setState(() {
+                      _passwordLength = int.parse(value).toDouble();
+                      _generatedPassword = _generatePassword();
+                    });
+                  },
+                ),
                     ),
                     const SizedBox(width: 5),
                     Expanded(
                       flex: 1,
-                      child: Slider(
-                        value: _passwordLength,
-                        min: 1,
-                        max: 50,
-                        divisions: 50,
-                        activeColor: Colors.red,
-                        onChanged: (value) {
+                      child: 
+                      PasswordLengthSlider(
+                        passwordLength: _passwordLength,
+                        onChanged: (double value) {
                           setState(() {
-                            _passwordLength = value;
+                            _passwordLength = value.toDouble();
                             _lengthController.text = value.toInt().toString();
-                            _generatedPassword =
-                                _generatePassword(); // Actualizamos la contraseña generada cuando cambia la longitud
+                            _generatedPassword = _generatePassword();
                           });
                         },
                       ),
@@ -246,7 +236,7 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
     if (values['numbersActivated']) chars += numericChars;
     if (values['symbolsActivated']) chars += symbolChars;
 
-    if(chars.isEmpty){
+    if (chars.isEmpty) {
       return '';
     }
 
