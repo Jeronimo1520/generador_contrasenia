@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:generador_contrasenia/models/password.dart';
 import 'package:generador_contrasenia/views/widgets/password_length_text_field.dart';
 import 'package:generador_contrasenia/views/widgets/password_option_checkboxes.dart';
-import 'dart:math';
 import 'slider.dart';
 
 class PasswordGenerator extends StatefulWidget {
@@ -184,33 +184,16 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
       const SnackBar(content: Text('Contraseña copiada al portapapeles')),
     );
   }
-
   String _generatePassword() {
-    String uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    String lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
-    String numericChars = '0123456789';
-    String symbolChars = '!@#%^&*()-_=+{}[]|;:,.<>?';
-
-    String chars = '';
-
-    if (values['uppercaseActivated']) chars += uppercaseChars;
-    if (values['lowercaseActivated']) chars += lowercaseChars;
-    if (values['numbersActivated']) chars += numericChars;
-    if (values['symbolsActivated']) chars += symbolChars;
-
-    if (chars.isEmpty) {
-      return '';
-    }
-
-    Random random = Random();
-
-    String password = '';
-
-    for (var i = 0; i < _passwordLength; i++) {
-      int randomIndex = random.nextInt(chars.length);
-      password += chars[randomIndex];
-    }
-
-    return password;
+   setState(() {
+      _generatedPassword = generatePassword(
+        length: _passwordLength,
+        includeUppercase: values['uppercaseActivated'],
+        includeLowercase: values['lowercaseActivated'],
+        includeNumbers: values['numbersActivated'],
+        includeSymbols: values['symbolsActivated'],
+      );
+    });
+    return _generatedPassword;
   }
 }
